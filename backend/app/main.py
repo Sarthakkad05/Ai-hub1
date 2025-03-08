@@ -68,7 +68,7 @@ from typing import List  # Add this import for better list typing
 import json
 import redis
 import asyncio
-from services import generate_problem, submit_answer, track_study_habits, get_leaderboard, get_overall_weaknesses, suggest_study_material_based_on_weakness
+from .services import generate_problem, submit_answer, track_study_habits, get_leaderboard, get_overall_weaknesses, suggest_study_material_based_on_weakness
 
 app = FastAPI()
 redis_client = redis.asyncio.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)

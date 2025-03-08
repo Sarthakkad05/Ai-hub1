@@ -112,7 +112,7 @@ import redis
 import json
 import uuid
 from fastapi import HTTPException
-from models import LeaderboardEntry, UserStudyHabit
+from .models import LeaderboardEntry, UserStudyHabit
 import asyncio
 
 MIN_OPERAND = 1
@@ -141,7 +141,7 @@ async def generate_problem(question_id: int):
     
     problem = {"question_id": question_id, "expression": expression, "answer": answer, "operator": operator}
 
-    await redis_client.set(f"question:{question_id}", json.dumps(problem), ex=600)
+    await redis_client.setex(f"question:{question_id}", json.dumps(problem), ex=600)
     return problem
 
 def safe_eval(expression: str):
@@ -249,6 +249,7 @@ async def update_quiz_score(user_id, score):
 
 async def update_leaderboard(user_id, total_score):
     await redis_client.zadd("leaderboard", {user_id: total_score})
+    await redis_client.zremrangebyrank("leaderboard", 100, -1)
 
 async def get_user_habits(user_id):
     habit = UserStudyHabit(user_id=user_id, dark_mode_used=1, low_bandwidth_mode_used=1)
