@@ -20,7 +20,7 @@ const Home = () => {
 
   return (
 
-    <div className="p-7 flex bg-gradient-to-b from-[#45B08C] to-white min-h-screen">
+    <div className="p-8 flex bg-gradient-to-b from-[#45B08C] to-white min-h-screen">
       <TrackStudyHabits userId={userId} onSubmit={handleTrackStudyHabitsSubmit} />
     <div className="flex mt-[210px] flex-col items-center">
     <h1 className="text-5xl font-bold text-white mt-6 mb-6">Are You Ready For A Quiz</h1>
