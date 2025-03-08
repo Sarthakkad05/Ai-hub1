@@ -61,15 +61,14 @@
 #     return get_leaderboard()
 
 
-
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import List  # Add this import for better list typing
 import json
 import redis
-
 import asyncio
-from .services import generate_problem, submit_answer, track_study_habits, get_leaderboard, analyze_weakness, recommend_study_material
+from services import generate_problem, submit_answer, track_study_habits, get_leaderboard, get_overall_weaknesses, suggest_study_material_based_on_weakness
 
 app = FastAPI()
 redis_client = redis.asyncio.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
@@ -105,8 +104,8 @@ async def get_quiz_question(question_id: int):
     return await generate_problem(question_id)
 
 @app.post("/submit_answer")
-async def submit_answer_route(answer: QuizAnswer):
-    result = await submit_answer(answer.user_id, answer.question_id, answer.user_answer)
+async def submit_answer_route(answer: QuizAnswer, weaknesses_accumulated: List[str]):
+    result = await submit_answer(answer.user_id, answer.question_id, answer.user_answer, weaknesses_accumulated)
     return result
 
 @app.post("/track_study_habits")
@@ -131,3 +130,22 @@ async def websocket_endpoint(websocket: WebSocket, user_id: str):
             await asyncio.sleep(5)
     except WebSocketDisconnect:
         print(f"User {user_id} disconnected")
+
+from fastapi import Query
+
+@app.get("/finish_quiz")
+async def finish_quiz_route(user_id: int):
+
+    weaknesses_accumulated = await redis_client.lrange(f"weaknesses:{user_id}", 0, -1)
+
+    overall_weakness, weakness_summary = await get_overall_weaknesses(weaknesses_accumulated)
+    study_material = await suggest_study_material_based_on_weakness(overall_weakness)
+
+    quiz_score = await redis_client.zscore("quiz_scores", user_id) or 0
+
+    return {
+        "quiz_score": int(quiz_score),
+        "overall_weakness": overall_weakness,
+        "weakness_summary": weakness_summary,
+        "study_material": study_material,
+    }
