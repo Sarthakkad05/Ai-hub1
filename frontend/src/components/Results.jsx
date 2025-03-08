@@ -39,7 +39,7 @@ const Results = () => {
       <p className="text-lg text-gray-600 mt-3">
         Weakness: <span className="font-semibold text-red-500">{results.weakness || "None"}</span>
       </p>
-      <p className="mt-4 p-4 bg-gray-100 rounded-lg text-gray-700 shadow-sm">
+      <p className="mt-3 p-4 bg-gray-100 rounded-lg text-gray-700 shadow-sm">
         📘 Study Material: {results.study_material}
       </p>
     </div>
