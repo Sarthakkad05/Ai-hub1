@@ -57,7 +57,7 @@ const Quiz = ({ userId }) => {
     <div className="flex-1 flex items-center justify-center">
       <div className="w-1/2 p-8 bg-white shadow-2xl rounded-xl">
         <h2 className="text-3xl font-bold text-gray-800 text-center">Question {currentIndex + 1}</h2>
-        <p className="text-xl text-gray-700 mt-4 text-center">{questions[currentIndex]?.expression}</p>
+        <p className="text-xl text-gray-700 mt-3 text-center">{questions[currentIndex]?.expression}</p>
   
         <input
           type="number"
