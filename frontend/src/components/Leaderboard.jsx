@@ -21,7 +21,7 @@ const Leaderboard = () => {
   }, []);
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
+    <div className="bg-white shadow-lg rounded-lg p-5 w-full max-w-md">
     <h2 className="text-2xl font-bold text-gray-800 text-center mb-4">Leaderboard</h2>
     
     <ul className="divide-y divide-gray-200">
